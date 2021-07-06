@@ -1,0 +1,37 @@
+<!doctype html>
+<head>
+  <title>Connect 4</title>
+  <link href="connect4.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Uchen&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <div id="container">
+    <div id="instructions-cont">
+        <div id="instructions">
+          <h1>Connect 4</h1>
+        <p>The game is won when a player makes four in a row (horizontally, vertically, or diagonally).
+           The game is a tie if the entire board fills up without a winner. You can see the current player to the right.</p>
+        <br>
+        </div>
+        <div id="player">
+          <div class="piece" id="curr-player"></div>
+        </div>
+    </div>
+    <div id="game">
+      <table id="board"></table>
+    </div>
+
+
+    <div id="game-over">
+      GAME OVER<br> Player <span id="winner">x</span> won!
+      <div id="play-again">Play Again!</div>
+    </div>
+    
+  </div>
+<script src="connect4.js"></script>
+
+</body>
+</html>
