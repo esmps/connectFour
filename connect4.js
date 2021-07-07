@@ -7,7 +7,6 @@
 
 const WIDTH = 7;
 const HEIGHT = 6;
-
 let currPlayer = 1; // active player: 1 or 2
 let board = []; // array of rows, each row is array of cells  (board[y][x])
 
@@ -59,10 +58,13 @@ function findSpotForCol(x) {
 
 //update DOM to place piece into HTML table of board 
 function placeInTable(y, x) {
-  let newPiece = document.createElement("div");
-  let placePiece = document.getElementById(`${y}-${x}`);
-  const player = document.getElementById("curr-player");
-  //create new game piece
+  const placePiece = document.getElementById(`${y}-${x}`);
+  placePiece.append(createNewPiece());
+  updateCurrPlayer();
+}
+
+function createNewPiece(){
+  const newPiece = document.createElement("div");
   newPiece.classList.add("piece");
   if (currPlayer === 1){
     newPiece.classList.add("p1");
@@ -70,9 +72,11 @@ function placeInTable(y, x) {
   else {
     newPiece.classList.add("p2");
   }
-  //place new game piece
-  placePiece.append(newPiece);
-  //update current player color for instruction section
+  return newPiece;
+}
+
+function updateCurrPlayer(){
+  const player = document.getElementById("curr-player");
   if (currPlayer === 1){
     player.classList.remove("p1");
     player.classList.add("p2");
@@ -85,47 +89,54 @@ function placeInTable(y, x) {
 
 //end game if a player won or there is a tie
 function endGame() {
-  let columnTop = document.getElementById("column-top");
-  let endGame = document.getElementById("game-over");
-  let winner = document.getElementById("winner");
-  let playAgain = document.getElementById("play-again");
+  const endGame = document.getElementById("game-over");
 
-  //Disable clicks so game cannot continue
-  columnTop.style.pointerEvents = 'none';
-  //announce winner
-  currPlayer === 1 ? winner.innerText = 1 : winner.innerText = 2;
-  //show game over display
+  announceWinner();  //show game over display
   setTimeout(() => {
     endGame.style.display = "block";
   }, 350);
-  //reload page to start game over
+  playAgain();
+}
+
+function playAgain(){
+  const playAgain = document.getElementById("play-again");
   playAgain.addEventListener("click", (evt) => {
     window.location.reload();
   })
 }
 
+function announceWinner(){
+  const winner = document.getElementById("winner");
+  if (checkForTie()){
+    winner.innerText = "1 & 2";
+  }
+  else{
+    currPlayer === 1 ? winner.innerText = 1 : winner.innerText = 2;
+  }
+}
+
+function disableClicks(){
+  const columnTop = document.getElementById("column-top");
+   columnTop.style.pointerEvents = 'none';
+}
+
 //handle click of column top to play piece 
 function handleClick(evt) {
-  // get x from ID of clicked cell
   let x = +evt.target.id;
-  // get next spot in column (if none, ignore click)
   let y = findSpotForCol(x);
   if (y === null) {
     return;
   }
   board[y][x] = currPlayer;
-  // place piece in board and add to HTML table
   placeInTable(y, x);
-  // check for win
-  if (checkForWin()) {
-        return endGame();
-  }
-  // check for tie
-  if (board.every(value => value.every(piece => (piece === 1 || piece === 2)))){
+  if (checkForWin() || checkForTie()) {
     return endGame();
   }
-  // switch players
   currPlayer === 1 ? currPlayer = 2 : currPlayer = 1;
+}
+
+function checkForTie(){
+  return board.every(value => value.every(piece => (piece === 1 || piece === 2)));
 }
 
 function checkForWin() {
