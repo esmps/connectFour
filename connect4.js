@@ -92,6 +92,7 @@ function endGame() {
   const endGame = document.getElementById("game-over");
 
   announceWinner();  //show game over display
+  disableClicks();
   setTimeout(() => {
     endGame.style.display = "block";
   }, 350);
